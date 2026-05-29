@@ -1,0 +1,76 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "polymind-backend"
+version = "0.1.0"
+description = "AI intelligence backend for prediction markets"
+requires-python = ">=3.11"
+dependencies = [
+    # Core framework
+    "fastapi[standard]>=0.115.0",
+    "uvicorn[standard]>=0.32.0",
+    "pydantic>=2.9.0",
+    "pydantic-settings>=2.6.0",
+    # Database
+    "sqlalchemy[asyncio]>=2.0.36",
+    "asyncpg>=0.30.0",
+    "alembic>=1.14.0",
+    # Cache + queue
+    "redis[hiredis]>=5.2.0",
+    "arq>=0.26.3",
+    # HTTP + WebSocket
+    "httpx>=0.28.0",
+    "websockets>=14.0",
+    # Auth
+    "pyjwt[crypto]>=2.10.0",
+    "python-multipart>=0.0.20",
+    "passlib[bcrypt]>=1.7.4",
+    "solders>=0.23.0",  # Solana key/signature handling
+    "pynacl>=1.5.0",  # ed25519 signature verification
+    "google-auth>=2.36.0",
+    # AI
+    "anthropic>=0.40.0",  # only if AI_PROVIDER=anthropic
+    "openai>=1.55.0",  # embeddings + DeepSeek/OpenAI chat (OpenAI-compatible)
+    "tiktoken>=0.8.0",
+    # Trading integrations
+    "py-clob-client>=0.20.0",  # Polymarket CLOB
+    "web3>=7.6.0",  # Polymarket uses Polygon
+    # Social/data sources
+    "tweepy>=4.14.0",  # Twitter API v2
+    "telethon>=1.38.0",  # Telegram
+    "praw>=7.8.0",  # Reddit
+    "feedparser>=6.0.11",  # RSS news
+    # Utilities
+    "structlog>=24.4.0",
+    "tenacity>=9.0.0",
+    "orjson>=3.10.0",
+    "python-dotenv>=1.0.1",
+    "sentry-sdk[fastapi]>=2.19.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.0",
+    "pytest-asyncio>=0.24.0",
+    "pytest-cov>=6.0.0",
+    "ruff>=0.8.0",
+    "mypy>=1.13.0",
+    "httpx>=0.28.0",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP", "B", "C4", "ASYNC"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.setuptools]
+packages = ["app"]
