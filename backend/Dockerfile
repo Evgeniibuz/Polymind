@@ -13,14 +13,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python deps first (layer caching)
-COPY pyproject.toml ./
-RUN pip install --upgrade pip && pip install .
-
-# Copy app
+# Copy everything (we need app/ present for pip install to discover the package)
 COPY . .
+
+# Install Python deps + the project itself
+RUN pip install --upgrade pip && pip install .
 
 EXPOSE 8000
 
-# Default command runs the API. Override for the worker.
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Run migrations then start the API. Override for the worker.
+CMD alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}
